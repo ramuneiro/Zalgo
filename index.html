@@ -9,9 +9,36 @@
   <h5>※アルファベット以外は上手く変換できない場合があります</h5>
   <label>元のテキスト：</label>
   <textarea id="input" rows="4">Hello</textarea><br>
-  <button onclick="zalgo()">変換</button>
-  <label>出力結果：</label>
-  <textarea id="output" rows="6" readonly></textarea>
+  <button class="convert-button" onclick="zalgo()">変換</button> 
+  <label>崩壊レベル（弱 ←→ 強）:</label>
+<input type="range" id="intensity" min="1" max="10" value="3">
+<span id="intensityValue">3</span>
+<script>
+  const intensitySlider = document.getElementById('intensity');
+  const intensityLabel = document.getElementById('intensityValue');
+  intensitySlider.oninput = () => {
+    intensityLabel.textContent = intensitySlider.value;
+  };
+</script> <label>出力結果：</label>
+  <div class="output-container">
+    <textarea id="output" rows="6" readonly></textarea>
+    <button class="copy-button" onclick="copyOutput()">コピー</button>
+  </div>
+
+  <script>
+    function copyOutput() {
+      const output = document.getElementById('output');
+      output.select();
+      document.execCommand('copy');
+      
+      const button = document.querySelector('.copy-button');
+      const originalText = button.textContent;
+      button.textContent = 'コピーしました！';
+      setTimeout(() => {
+        button.textContent = originalText;
+      }, 2000);
+    }
+  </script>
 
   <script>
     const zalgo_up = ["̍","̎","̄","̅","̿","̑","̆","̐","͒","͗","͑","̇","̈","̊","͂","̓","͊","͋","͌","̃","̂","̌"];
@@ -22,18 +49,20 @@
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    function zalgoChar(char) {
-      let result = char;
-      const up = Math.floor(Math.random() * 3) + 1;
-      const mid = Math.floor(Math.random() * 2);
-      const down = Math.floor(Math.random() * 3) + 1;
+   function zalgoChar(char) {
+  let result = char;
+  const level = parseInt(document.getElementById("intensity").value, 10);
 
-      for (let i = 0; i < up; i++) result += randomZalgo(zalgo_up);
-      for (let i = 0; i < mid; i++) result += randomZalgo(zalgo_mid);
-      for (let i = 0; i < down; i++) result += randomZalgo(zalgo_down);
+  const up = Math.floor(Math.random() * level);
+  const mid = Math.floor(Math.random() * (level / 2));
+  const down = Math.floor(Math.random() * level);
 
-      return result;
-    }
+  for (let i = 0; i < up; i++) result += randomZalgo(zalgo_up);
+  for (let i = 0; i < mid; i++) result += randomZalgo(zalgo_mid);
+  for (let i = 0; i < down; i++) result += randomZalgo(zalgo_down);
+
+  return result;
+}
 
     function zalgo() {
       const input = document.getElementById("input").value;
