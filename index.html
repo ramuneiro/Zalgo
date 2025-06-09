@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Zalgo テキストジェネレーター</title>  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Zalgo ジェネレーター</h1>
+  <h5>※アルファベット以外は上手く変換できない場合があります</h5>
+  <label>元のテキスト：</label>
+  <textarea id="input" rows="4">Hello</textarea><br>
+  <button onclick="zalgo()">変換</button>
+  <label>出力結果：</label>
+  <textarea id="output" rows="6" readonly></textarea>
+
+  <script>
+    const zalgo_up = ["̍","̎","̄","̅","̿","̑","̆","̐","͒","͗","͑","̇","̈","̊","͂","̓","͊","͋","͌","̃","̂","̌"];
+    const zalgo_down = ["̖","̗","̘","̙","̜","̝","̞","̟","̠","̤","̥","̦","̩","̪","̫","̬","̭","̮","̯","̰","̱","̲","̳","̹","̺","̻","̼","ͅ","͇","͈","͉","͍","͎","͓","͔"];
+    const zalgo_mid = ["̕","̛","̀","́","͘","̡","̢","̧","̨","̴","̵","̶","͜","͝","͞","͟","͠","͢","̸","̷","͡"];
+
+    function randomZalgo(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function zalgoChar(char) {
+      let result = char;
+      const up = Math.floor(Math.random() * 3) + 1;
+      const mid = Math.floor(Math.random() * 2);
+      const down = Math.floor(Math.random() * 3) + 1;
+
+      for (let i = 0; i < up; i++) result += randomZalgo(zalgo_up);
+      for (let i = 0; i < mid; i++) result += randomZalgo(zalgo_mid);
+      for (let i = 0; i < down; i++) result += randomZalgo(zalgo_down);
+
+      return result;
+    }
+
+    function zalgo() {
+      const input = document.getElementById("input").value;
+      const chars = [...input];
+      const output = chars.map(c => zalgoChar(c)).join('');
+      document.getElementById("output").value = output;
+    }
+  </script>
+</body>
+</html>
